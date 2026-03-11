@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orion Design — Architectural Drafting & Design | Victoria, BC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jost:ital,wght@0,200;0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* =========================================
+   RESET & ROOT
+   ========================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --charcoal: #0E1220;
+  --navy: #151B2E;
+  --navy-mid: #1E2640;
+  --brass: #C4965A;
+  --brass-light: #D4AE7A;
+  --brass-dim: rgba(196,150,90,0.15);
+  --off-white: #F0EDE6;
+  --warm-white: #FAF8F4;
+  --mid-grey: #6B7280;
+  --light-grey: #9BA3AF;
+  --rule: rgba(240,237,230,0.08);
+  --rule-brass: rgba(196,150,90,0.25);
+}
+
+body {
+  background: #0E1220;
+  color: var(--off-white);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   NOISE TEXTURE OVERLAY
+   ========================================= */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* =========================================
+   TYPOGRAPHY UTILS
+   ========================================= */
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--brass);
+  flex-shrink: 0;
+}
+
+h2.section-title {
+  font-family: 'Syncopate', sans-serif;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  color: var(--off-white);
+}
+
+/* =========================================
+   NAV
+   ========================================= */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(17,19,24,0.97) 0%, rgba(17,19,24,0) 100%);
+  backdrop-filter: blur(2px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav-name {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--off-white);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.nav-sub {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 7.5px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--brass);
+  line-height: 1;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--light-grey);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--off-white); }
+
+/* =========================================
+   LOGO SVG MARK (reusable)
+   ========================================= */
+.orion-mark { flex-shrink: 0; }
+
+/* =========================================
+   HERO
+   ========================================= */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 48px 80px;
+}
+
+/* Grid background */
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(196,150,90,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196,150,90,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 60% 50%, black 30%, transparent 100%);
+}
+
+/* Constellation background detail */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: 50%; right: 8%;
+  transform: translateY(-50%);
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(ellipse at center, rgba(196,150,90,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-left { display: flex; flex-direction: column; gap: 32px; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px 7px 10px;
+  border: 1px solid var(--rule-brass);
+  background: var(--brass-dim);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  font-weight: 400;
+  width: fit-content;
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero-tag svg { width: 14px; height: 14px; }
+
+h1.hero-title {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: 700;
+  font-size: clamp(32px, 4.5vw, 58px);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: var(--off-white);
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+h1.hero-title span { color: var(--brass); }
+
+.hero-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--light-grey);
+  max-width: 420px;
+  line-height: 1.8;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--brass);
+  color: var(--off-white);
+  padding: 14px 28px;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--brass-light); transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--off-white);
+  padding: 13px 28px;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  transition: border-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.btn-ghost:hover { border-color: var(--brass); color: var(--brass); }
+
+/* Hero right — large constellation mark */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1.2s 0.4s ease both;
+}
+
+/* =========================================
+   STATS BAR
+   ========================================= */
+#stats {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 40px 48px;
+}
+
+.stats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  divide: var(--rule);
+}
+
+.stat-item {
+  padding: 0 40px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { border-right: none; }
+
+.stat-number {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--off-white);
+  line-height: 1;
+}
+.stat-number span { color: var(--brass); }
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid-grey);
+  font-weight: 400;
+}
+
+/* =========================================
+   SERVICES
+   ========================================= */
+#services {
+  padding: 120px 48px;
+  position: relative;
+}
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 72px;
+  max-width: 520px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.service-card {
+  background: var(--navy);
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--brass);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.service-card:hover { background: var(--navy-mid); }
+.service-card:hover::before { transform: scaleX(1); }
+
+.service-icon {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--rule-brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brass);
+}
+
+.service-num {
+  position: absolute;
+  top: 36px; right: 36px;
+  font-family: 'Syncopate', sans-serif;
+  font-size: 11px;
+  color: var(--rule);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.service-title {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--off-white);
+  line-height: 1.4;
+}
+
+.service-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--light-grey);
+  line-height: 1.8;
+  flex: 1;
+}
+
+.service-link {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  margin-top: auto;
+  transition: gap 0.2s;
+}
+.service-link:hover { gap: 14px; }
+.service-link::after { content: '→'; }
+
+/* =========================================
+   ABOUT
+   ========================================= */
+#about {
+  padding: 120px 48px;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+#about::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(196,150,90,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.about-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.about-left {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.about-body {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--light-grey);
+  line-height: 1.9;
+}
+
+.about-body strong {
+  color: var(--off-white);
+  font-weight: 400;
+}
+
+.about-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+
+.credential {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--light-grey);
+  letter-spacing: 0.05em;
+}
+.credential::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass);
+  flex-shrink: 0;
+}
+
+.about-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-block {
+  padding: 28px 32px;
+  background: rgba(17,19,24,0.5);
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+.detail-block:hover {
+  border-left-color: var(--brass);
+  background: rgba(17,19,24,0.8);
+}
+
+.detail-label {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--off-white);
+  line-height: 1.6;
+}
+
+/* =========================================
+   PROCESS
+   ========================================= */
+#process {
+  padding: 120px 48px;
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 72px;
+  position: relative;
+}
+
+/* Connecting line */
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(12.5% + 20px);
+  right: calc(12.5% + 20px);
+  height: 1px;
+  background: linear-gradient(to right, var(--brass) 0%, var(--rule-brass) 100%);
+}
+
+.step {
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.step-num-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--rule-brass);
+  background: #0E1220;
+  position: relative;
+  z-index: 2;
+}
+
+.step-num {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brass);
+}
+
+.step-title {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--off-white);
+  margin-top: 8px;
+}
+
+.step-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mid-grey);
+  line-height: 1.8;
+}
+
+/* =========================================
+   CONTACT
+   ========================================= */
+#contact {
+  padding: 120px 48px;
+  background: var(--navy);
+  position: relative;
+}
+
+.contact-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.contact-left {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.contact-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--light-grey);
+  line-height: 1.9;
+  max-width: 380px;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-item-label {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass);
+  font-weight: 500;
+}
+
+.contact-item-value {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--off-white);
+}
+
+.contact-item-value a {
+  color: var(--off-white);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-item-value a:hover { color: var(--brass-light); }
+
+/* Contact Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mid-grey);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(17,19,24,0.6);
+  border: 1px solid var(--rule);
+  color: var(--off-white);
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  padding: 13px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+  -webkit-appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--brass);
+}
+
+.form-group select option {
+  background: var(--navy);
+  color: var(--off-white);
+}
+
+.form-submit {
+  margin-top: 8px;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+footer {
+  padding: 40px 48px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-copy {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--mid-grey);
+  letter-spacing: 0.05em;
+}
+
+.footer-location {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--mid-grey);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-location::before {
+  content: '·';
+  color: var(--brass);
+}
+
+.footer-aibc {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brass);
+  border: 1px solid var(--rule-brass);
+  padding: 5px 12px;
+}
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.star-1 { animation: twinkle 3s 0.5s ease-in-out infinite; }
+.star-2 { animation: twinkle 3s 1.2s ease-in-out infinite; }
+.star-3 { animation: twinkle 3s 0.8s ease-in-out infinite; }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  #hero { padding: 100px 24px 60px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { display: none; }
+  #stats { padding: 32px 24px; }
+  .stats-inner { grid-template-columns: 1fr; gap: 24px; }
+  .stat-item { padding: 0; border-right: none; border-bottom: 1px solid var(--rule); padding-bottom: 24px; }
+  .stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+  #services, #about, #process, #contact { padding: 80px 24px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .about-inner { grid-template-columns: 1fr; gap: 48px; }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .process-steps::before { display: none; }
+  .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+  footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <svg class="orion-mark" width="40" height="18" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="24" x2="66" y2="8" stroke="#C4965A" stroke-width="1" opacity="1"/>
+      <circle cx="6" cy="24" r="2.5" fill="#C4965A" class="star-1"/>
+      <line x1="6" y1="19" x2="6" y2="29" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+      <line x1="1" y1="24" x2="11" y2="24" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+      <circle cx="36" cy="16" r="3.5" fill="#C4965A" class="star-2"/>
+      <line x1="36" y1="10" x2="36" y2="22" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+      <line x1="30" y1="16" x2="42" y2="16" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+      <circle cx="66" cy="8" r="2" fill="#C4965A" class="star-3"/>
+      <line x1="66" y1="4" x2="66" y2="12" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+      <line x1="62" y1="8" x2="70" y2="8" stroke="#C4965A" stroke-width="0.8" opacity="0.9"/>
+    </svg>
+    <div class="nav-wordmark">
+      <div class="nav-name">Orion Design</div>
+      <div class="nav-sub">Architectural Drafting & Design</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Victoria & South Island, BC
+      </div>
+      <h1 class="hero-title">
+        Precision <span>Design.</span><br>
+        Permit-Ready<br>
+        Drawings.
+      </h1>
+      <p class="hero-desc">
+        Residential architectural drafting and design services for homeowners and builders across Greater Victoria and the South Island. From concept to construction documents.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Start a Project</a>
+        <a href="#services" class="btn-ghost">View Services</a>
+      </div>
+    </div>
+
+    <!-- Large constellation mark -->
+    <div class="hero-right">
+      <svg width="420" height="280" viewBox="0 0 420 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid lines faint -->
+        <line x1="0" y1="70" x2="420" y2="70" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+        <line x1="0" y1="140" x2="420" y2="140" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+        <line x1="0" y1="210" x2="420" y2="210" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+        <line x1="105" y1="0" x2="105" y2="280" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+        <line x1="210" y1="0" x2="210" y2="280" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+        <line x1="315" y1="0" x2="315" y2="280" stroke="#C4965A" stroke-width="0.3" opacity="0.15" stroke-dasharray="4 8"/>
+
+        <!-- Belt line -->
+        <line x1="50" y1="210" x2="370" y2="70" stroke="#C4965A" stroke-width="1.5" opacity="0.7"/>
+
+        <!-- Alnitak (left, largest) -->
+        <circle cx="50" cy="210" r="6" fill="#C4965A" opacity="0.9" class="star-1"/>
+        <circle cx="50" cy="210" r="14" fill="#C4965A" opacity="0.12"/>
+        <line x1="50" y1="186" x2="50" y2="234" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <line x1="26" y1="210" x2="74" y2="210" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <!-- annotation -->
+        <text x="60" y="206" fill="#C4965A" font-size="8" font-family="Jost, sans-serif" letter-spacing="2" opacity="0.8">ALNITAK</text>
+
+        <!-- Alnilam (center, biggest) -->
+        <circle cx="210" cy="140" r="9" fill="#C4965A" opacity="0.9" class="star-2"/>
+        <circle cx="210" cy="140" r="22" fill="#C4965A" opacity="0.1"/>
+        <line x1="210" y1="108" x2="210" y2="172" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <line x1="178" y1="140" x2="242" y2="140" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <text x="222" y="136" fill="#C4965A" font-size="8" font-family="Jost, sans-serif" letter-spacing="2" opacity="0.8">ALNILAM</text>
+
+        <!-- Mintaka (right, small) -->
+        <circle cx="370" cy="70" r="5" fill="#C4965A" opacity="0.9" class="star-3"/>
+        <circle cx="370" cy="70" r="12" fill="#C4965A" opacity="0.12"/>
+        <line x1="370" y1="50" x2="370" y2="90" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <line x1="350" y1="70" x2="390" y2="70" stroke="#C4965A" stroke-width="1" opacity="0.85"/>
+        <text x="346" y="98" fill="#C4965A" font-size="8" font-family="Jost, sans-serif" letter-spacing="2" opacity="0.8">MINTAKA</text>
+
+        <!-- Elevation marker bottom right -->
+        <text x="320" y="265" fill="#C4965A" font-size="7" font-family="Jost, sans-serif" letter-spacing="3" opacity="0.3">ORION · 48°25'N 123°22'W</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<div id="stats">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">20<span>+</span></div>
+      <div class="stat-label">Years in Practice</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">AIBC</div>
+      <div class="stat-label">Registered Architectural Technologist</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">YYJ</div>
+      <div class="stat-label">Victoria & South Island, BC</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SERVICES ===================== -->
+<section id="services">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="eyebrow">What I Do</div>
+      <h2 class="section-title">Services</h2>
+      <p style="font-size:14px; color:var(--light-grey); font-weight:300; line-height:1.8; margin-top:4px;">
+        Full-service residential drafting and design — from initial concept through to permit-ready construction documents.
+      </p>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <span class="service-num">01</span>
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="service-title">New Home Design & Drafting</div>
+        <div class="service-desc">
+          Custom residential design from concept to construction documents. Working with your lot, your budget, and your vision to produce complete drawing packages ready for builder tender and permit submission.
+        </div>
+        <a href="#contact" class="service-link">Discuss your project</a>
+      </div>
+
+      <div class="service-card">
+        <span class="service-num">02</span>
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div class="service-title">Permit & Construction Drawings</div>
+        <div class="service-desc">
+          Complete, code-compliant drawing sets prepared for municipal permit submission. Floor plans, elevations, sections, and details — coordinated and clearly dimensioned for both building departments and contractors.
+        </div>
+        <a href="#contact" class="service-link">Discuss your project</a>
+      </div>
+
+      <div class="service-card">
+        <span class="service-num">03</span>
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+          </svg>
+        </div>
+        <div class="service-title">Secondary Suites & Additions</div>
+        <div class="service-desc">
+          Permit drawings for basement suites, carriage houses, home additions, and renovation projects. Navigating the BC Building Code and local zoning requirements to keep your project on track.
+        </div>
+        <a href="#contact" class="service-link">Discuss your project</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-inner">
+      <div class="about-left">
+        <div class="eyebrow">About</div>
+        <h2 class="section-title">Ryan Paisner<br>AT (AIBC)</h2>
+        <p class="about-body">
+          Twenty years of practice across the full range of BC construction and design — private and commercial residential, private and public institutional, custom timber framing and mass timber, and commercial projects — from drafting and design to project management.
+        </p>
+        <p class="about-body">
+          Providing permit-ready residential design and drafting, documentation, and visualizations. Working closely with architectural practices, home owners and developers on a wide range of projects, simple to complex.
+        </p>
+        <p class="about-body">
+          Working in Revit, AutoCAD, Bluebeam, and TwinMotion.
+        </p>
+        <div class="about-credentials">
+          <div class="credential">Registered Architectural Technologist — AIBC</div>
+          <div class="credential">BCIT · Drafting & Design</div>
+          <div class="credential">Revit · AutoCAD · Bluebeam · TwinMotion</div>
+          <div class="credential">Greater Victoria, South Island & Remote</div>
+        </div>
+      </div>
+
+      <div class="about-right">
+        <div class="detail-block">
+          <div class="detail-label">Practice Type</div>
+          <div class="detail-value">Independent — you work directly with me, start to finish</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">Based In</div>
+          <div class="detail-value">Saanich, BC<br><span style="font-size:12px; color:var(--mid-grey);">Serving Greater Victoria & South Vancouver Island</span></div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">Typical Projects</div>
+          <div class="detail-value">Residential new builds, renovations,<br>suites, additions — permit through construction</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">Software</div>
+          <div class="detail-value">Autodesk Revit &amp; AutoCAD</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">In Practice Since</div>
+          <div class="detail-value">20+ years</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROCESS ===================== -->
+<section id="process">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="eyebrow">How It Works</div>
+      <h2 class="section-title">The Process</h2>
+    </div>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-num-wrap"><span class="step-num">01</span></div>
+        <div class="step-title">Consultation</div>
+        <div class="step-desc">We talk through the project — scope, site, timeline, and budget. No cost, no obligation. Just a clear picture of what's involved.</div>
+      </div>
+      <div class="step">
+        <div class="step-num-wrap"><span class="step-num">02</span></div>
+        <div class="step-title">Concept & Scope</div>
+        <div class="step-desc">I develop a preliminary concept and a fixed-fee proposal. You know the cost before we start drafting.</div>
+      </div>
+      <div class="step">
+        <div class="step-num-wrap"><span class="step-num">03</span></div>
+        <div class="step-title">Drafting & Review</div>
+        <div class="step-desc">Drawing production with regular check-ins. You review at each stage and provide feedback before we move forward.</div>
+      </div>
+      <div class="step">
+        <div class="step-num-wrap"><span class="step-num">04</span></div>
+        <div class="step-title">Permit Submission</div>
+        <div class="step-desc">Final permit-ready drawing package, coordinated for your municipality's requirements and ready for submission.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <div class="eyebrow">Get in Touch</div>
+      <h2 class="section-title">Start a<br>Conversation</h2>
+      <p class="contact-desc">
+        Have a project in mind? I'm happy to talk through what's involved before you commit to anything. Most projects start with a quick call.
+      </p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-label">Phone</div>
+          <div class="contact-item-value"><a href="tel:2508893859">250.889.3859</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-label">Location</div>
+          <div class="contact-item-value">Saanich, BC<br><span style="font-size:12px; color:var(--mid-grey);">Serving Greater Victoria & South Island</span></div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" placeholder="Your number" autocomplete="tel">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="service">Project Type</label>
+        <select id="service">
+          <option value="" disabled selected>Select a service…</option>
+          <option>New Home Design & Drafting</option>
+          <option>Permit & Construction Drawings</option>
+          <option>Secondary Suite or Addition</option>
+          <option>Other / Not Sure Yet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="message">Project Details</label>
+        <textarea id="message" rows="4" placeholder="Brief description of your project, location, and timeline…"></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Send Message</button>
+      </div>
+      <div id="form-confirm" style="display:none; font-size:12px; color:var(--brass); letter-spacing:0.1em; padding-top:8px; text-align:center;">
+        ✓ &nbsp;Message sent — I'll be in touch shortly.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-left">
+    <svg class="orion-mark" width="32" height="14" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="6" y1="24" x2="66" y2="8" stroke="#C4965A" stroke-width="1" opacity="0.9"/>
+      <circle cx="6" cy="24" r="2.5" fill="#C4965A" opacity="1"/>
+      <circle cx="36" cy="16" r="3.5" fill="#C4965A" opacity="1"/>
+      <circle cx="66" cy="8" r="2" fill="#C4965A" opacity="0.6"/>
+    </svg>
+    <span class="footer-copy">© 2025 Orion Design</span>
+    <span class="footer-location">Saanich, BC</span>
+  </div>
+  <div class="footer-aibc">AIBC Registered Architectural Technologist</div>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('form-confirm').style.display = 'block';
+  e.target.reset();
+  setTimeout(() => {
+    document.getElementById('form-confirm').style.display = 'none';
+  }, 5000);
+}
+</script>
+
+</body>
+</html>
